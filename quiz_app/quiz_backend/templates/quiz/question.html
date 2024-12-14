@@ -1,0 +1,108 @@
+<!-- templates/quiz/question.html -->
+<form method="post" action="{% url 'submit_answer' %}">
+    {% csrf_token %}
+    <h3>{{ question.text }}</h3>
+    <label><input type="radio" name="selected_option" value="A"> {{ question.option_a }}</label><br>
+    <label><input type="radio" name="selected_option" value="B"> {{ question.option_b }}</label><br>
+    <label><input type="radio" name="selected_option" value="C"> {{ question.option_c }}</label><br>
+    <label><input type="radio" name="selected_option" value="D"> {{ question.option_d }}</label><br>
+    <input type="hidden" name="question_id" value="{{ question.id }}">
+    <button type="submit">Submit Answer</button>
+</form>
+
+<div id="timer">
+    <h3>Time Remaining: <span id="time">{{ time_left }}</span> seconds</h3>
+</div>
+
+<script>
+    // Safely embed the time_left value using json_script to prevent issues with special characters
+    var timeLeft = JSON.parse(document.getElementById('time_left').textContent);
+    var timerElement = document.getElementById('time');
+    
+    function updateTimer() {
+        if (timeLeft > 0) {
+            timeLeft--;
+            timerElement.textContent = timeLeft;
+        } else {
+            window.location.href = "{% url 'quiz_summary' %}";  // Redirect to summary when time is up
+        }
+    }
+
+    setInterval(updateTimer, 1000);  // Update the timer every second
+</script>
+
+<!-- Hidden div to safely pass time_left to JavaScript -->
+<div id="time_left" style="display: none;">{{ time_left|json_script }}</div>
+
+
+<style>
+    /* General layout */
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .quiz-form {
+        width: 100%;
+        max-width: 600px;
+        margin: 30px auto;
+        padding: 20px;
+        background-color: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .quiz-form h3 {
+        margin-bottom: 20px;
+        color: #333;
+        font-size: 24px;
+    }
+
+    .options {
+        margin-bottom: 20px; /* Add space between options and submit button */
+    }
+
+    .options label {
+        font-size: 16px;
+        display: block;
+        margin-bottom: 8px;
+        color: #555;
+    }
+
+    .submit-btn {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 4px;
+        width: 100%;
+        transition: background-color 0.3s ease;
+    }
+
+    .submit-btn:hover {
+        background-color: #45a049;
+    }
+
+    .timer {
+        text-align: center;
+        font-size: 18px;
+        background-color: #f9f9f9;
+        padding: 15px;
+        border-radius: 4px;
+        margin-top: 20px;
+        font-weight: bold;
+    }
+
+    #time {
+        color: #d9534f;
+        font-size: 24px;
+    }
+</style>
