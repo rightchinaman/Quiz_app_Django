@@ -1,4 +1,3 @@
-# views.py
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.utils import timezone
@@ -17,20 +16,20 @@ def get_question(request):
 
     session = QuizSession.objects.get(id=session_id)
 
-    # Get remaining questions
+    
     remaining_questions = session.remaining_questions()
 
     if not remaining_questions:
-        return redirect('quiz_summary')  # All questions have been asked, go to summary
+        return redirect('quiz_summary')  
 
-    # Pick a random question from remaining questions
+    
     question = random.choice(remaining_questions)
     
-    # Mark this question as asked in the session
+    
     session.questions_asked.add(question)
     session.save()
 
-    time_left = session.time_left()  # Get the remaining time for the session
+    time_left = session.time_left()  
 
     return render(request, 'quiz/question.html', {'question': question, 'time_left': time_left})
 
@@ -57,15 +56,15 @@ def submit_answer(request):
         else:
             session.incorrect_answers += 1
 
-        # Increment the current question index
+        
         session.current_question_index += 1
         session.save()
 
-        # Check if it's the last question and redirect to the summary page if so
+        
         if session.current_question_index >= len(Question.objects.all()):
             return redirect('quiz_summary')
 
-        return redirect('get_question')  # Show the next question
+        return redirect('get_question')  
 
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 

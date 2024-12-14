@@ -1,4 +1,3 @@
-<!-- templates/quiz/question.html -->
 <form method="post" action="{% url 'submit_answer' %}">
     {% csrf_token %}
     <h3>{{ question.text }}</h3>
@@ -15,7 +14,6 @@
 </div>
 
 <script>
-    // Safely embed the time_left value using json_script to prevent issues with special characters
     var timeLeft = JSON.parse(document.getElementById('time_left').textContent);
     var timerElement = document.getElementById('time');
     
@@ -24,19 +22,19 @@
             timeLeft--;
             timerElement.textContent = timeLeft;
         } else {
-            window.location.href = "{% url 'quiz_summary' %}";  // Redirect to summary when time is up
+            window.location.href = "{% url 'quiz_summary' %}";  
         }
     }
 
-    setInterval(updateTimer, 1000);  // Update the timer every second
+    setInterval(updateTimer, 1000);  
 </script>
 
-<!-- Hidden div to safely pass time_left to JavaScript -->
+
 <div id="time_left" style="display: none;">{{ time_left|json_script }}</div>
 
 
 <style>
-    /* General layout */
+    
     body {
         font-family: Arial, sans-serif;
         background-color: #f4f4f9;
@@ -65,7 +63,7 @@
     }
 
     .options {
-        margin-bottom: 20px; /* Add space between options and submit button */
+        margin-bottom: 20px; 
     }
 
     .options label {
